@@ -3,102 +3,79 @@ import random
 from datetime import datetime, date
 
 # ==========================================
-# 1. 系統設定
+# 1. 系統設定 (第一性原理：零摩擦力啟動)
 # ==========================================
 st.set_page_config(
-    page_title="2026 復興區花季行程規劃 (風管處地圖融合版)",
-    page_icon="🌸",
+    page_title="2026 長濱部落深度旅遊 (山海慢活版)",
+    page_icon="🌊",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
 
 # ==========================================
-# 2. CSS 美學 (iPhone 深色模式/黑底黑字 修復專區)
+# 2. CSS 美學 (UIUX-CRF v9.0 認知鎖定：太平洋海藍主題)
 # ==========================================
 st.markdown("""
     <style>
-    /* 1. 強制全站背景為粉色，字體為深色 */
+    /* 1. 全站背景為淺沙灘色，字體為深灰 */
     .stApp {
-        background-color: #FFF0F5;
+        background-color: #F8F9FA;
         font-family: "Microsoft JhengHei", sans-serif;
-        color: #333333 !important;
+        color: #2C3E50 !important;
     }
     
     /* 2. 強制所有一般文字元素為深色 */
     p, div, span, h1, h2, h3, h4, h5, h6, label, .stMarkdown {
-        color: #333333 !important;
+        color: #2C3E50 !important;
     }
 
     /* === 3. 核心修復：強制輸入框與選單在深色模式下維持「白底黑字」 === */
-    /* 針對輸入框容器、下拉選單容器 */
     div[data-baseweb="select"] > div, 
     div[data-baseweb="input"] > div, 
     div[data-baseweb="base-input"] {
-        background-color: #ffffff !important; /* 強制白底 */
-        border: 1px solid #cccccc !important;
-        color: #333333 !important; /* 強制黑字 */
-    }
-    
-    /* 針對輸入框內的文字 (日期、打字) */
-    input {
-        color: #333333 !important;
-    }
-    
-    /* 針對下拉選單內的文字 */
-    div[data-baseweb="select"] span {
-        color: #333333 !important;
-    }
-    
-    /* 針對下拉選單彈出的列表 */
-    ul[data-baseweb="menu"] {
         background-color: #ffffff !important;
+        border: 1px solid #BDC3C7 !important;
+        color: #2C3E50 !important;
     }
-    li[data-baseweb="option"] {
-        color: #333333 !important;
+    input, div[data-baseweb="select"] span, li[data-baseweb="option"] {
+        color: #2C3E50 !important;
     }
+    ul[data-baseweb="menu"] { background-color: #ffffff !important; }
+    svg { fill: #2C3E50 !important; color: #2C3E50 !important; }
 
-    /* 針對 SVG 圖示 (如日曆icon、下拉箭頭) 強制轉深色 */
-    svg {
-        fill: #333333 !important;
-        color: #333333 !important;
-    }
-
-    /* === 4. 特別加強：日期選單高亮 (使用者指定) === */
+    /* === 4. 特別加強：日期選單高亮 (海洋風) === */
     div[data-testid="stDateInput"] > label {
-        color: #C71585 !important; /* 深粉紅 */
-        font-size: 24px !important; /* 加大字體 */
+        color: #005F73 !important; 
+        font-size: 24px !important; 
         font-weight: 900 !important;
-        text-shadow: 0px 0px 5px rgba(255, 105, 180, 0.6);
+        text-shadow: 0px 0px 5px rgba(0, 95, 115, 0.3);
         margin-bottom: 10px !important;
         display: block;
     }
     div[data-testid="stDateInput"] div[data-baseweb="input"] {
-        border: 3px solid #FF1493 !important; /* 粗邊框 */
-        background-color: #FFF5F7 !important;
+        border: 3px solid #0A9396 !important; 
+        background-color: #E0FBFC !important;
         border-radius: 10px !important;
-        box-shadow: 0 0 15px rgba(255, 20, 147, 0.3); /* 發光特效 */
+        box-shadow: 0 0 15px rgba(10, 147, 150, 0.2); 
     }
 
     /* 隱藏官方元件 */
     header {visibility: hidden;}
     footer {display: none !important;}
     
-    /* 標題區 (維持白字，這裡需要反向設定) */
+    /* 標題區：太平洋漸層 */
     .header-box {
-        background: linear-gradient(135deg, #FF69B4 0%, #FFB7C5 100%);
+        background: linear-gradient(135deg, #005F73 0%, #0A9396 50%, #94D2BD 100%);
         padding: 30px 20px;
         border-radius: 0 0 30px 30px;
         color: white !important;
         text-align: center;
         margin-bottom: 25px;
-        box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+        box-shadow: 0 4px 15px rgba(0, 95, 115, 0.4);
         margin-top: -60px;
     }
-    /* 標題區內的文字需強制反白，覆蓋上面的全域黑字 */
-    .header-box h1, .header-box div, .header-box span {
-        color: white !important;
-    }
-    .header-title { font-size: 28px; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); }
+    .header-box h1, .header-box div, .header-box span { color: white !important; }
+    .header-title { font-size: 28px; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
     
     /* 輸入卡片 */
     .input-card {
@@ -106,14 +83,14 @@ st.markdown("""
         border-radius: 20px;
         padding: 20px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        border: 1px solid #FFE4E1;
+        border: 1px solid #E0FBFC;
         margin-bottom: 20px;
     }
     
-    /* 按鈕 */
+    /* 按鈕：大地橘色 (呼應海岸日出) */
     .stButton>button {
         width: 100%;
-        background-color: #FF1493;
+        background-color: #CA6702;
         color: white !important;
         border-radius: 50px;
         border: none;
@@ -122,11 +99,12 @@ st.markdown("""
         transition: 0.3s;
         font-size: 18px;
     }
+    .stButton>button:hover { background-color: #EE9B00; }
     
     /* 資訊看板 */
     .info-box {
-        background-color: #fffbea;
-        border-left: 5px solid #FFD700;
+        background-color: #E9D8A6;
+        border-left: 5px solid #CA6702;
         padding: 15px;
         border-radius: 5px;
         margin-bottom: 20px;
@@ -134,45 +112,46 @@ st.markdown("""
     
     /* 時間軸 */
     .timeline-item {
-        border-left: 3px solid #FF69B4;
+        border-left: 3px solid #0A9396;
         padding-left: 20px;
         margin-bottom: 20px;
         position: relative;
     }
     .timeline-item::before {
-        content: '🌸';
+        content: '🌊';
         position: absolute;
         left: -13px;
         top: 0;
-        background: #FFF0F5;
+        background: #F8F9FA;
         border-radius: 50%;
     }
     .day-header {
-        background: #FFE4E1;
-        color: #C71585 !important;
+        background: #E0FBFC;
+        color: #005F73 !important;
         padding: 5px 15px;
         border-radius: 15px;
         display: inline-block;
         margin-bottom: 15px;
         font-weight: bold;
     }
-    .spot-title { font-weight: bold; color: #C71585 !important; font-size: 18px; }
+    .spot-title { font-weight: bold; color: #005F73 !important; font-size: 18px; }
     .spot-tag { 
-        font-size: 12px; background: #FFE4E1; color: #D87093 !important; 
-        padding: 2px 8px; border-radius: 10px; margin-right: 5px;
+        font-size: 12px; background: #94D2BD; color: #005F73 !important; 
+        padding: 2px 8px; border-radius: 10px; margin-right: 5px; font-weight: bold;
     }
     
     /* 住宿卡片 */
     .hotel-card {
-        background: #F8F8FF;
-        border-left: 5px solid #9370DB;
+        background: #FFFFFF;
+        border-left: 5px solid #005F73;
         padding: 10px;
         border-radius: 8px;
         margin-bottom: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
     .hotel-tag {
         font-size: 11px;
-        background: #9370DB;
+        background: #005F73;
         color: white !important;
         padding: 2px 6px;
         border-radius: 8px;
@@ -187,112 +166,54 @@ st.markdown("""
         border: 1px solid #eee;
         font-size: 14px;
         margin-bottom: 8px;
-        border-left: 3px solid #FF69B4;
+        border-left: 3px solid #0A9396;
     }
-    .flower-badge {
-        background: #FF69B4; color: white !important; padding: 1px 5px; border-radius: 4px; font-size: 11px; margin-left: 5px;
+    .feature-badge {
+        background: #CA6702; color: white !important; padding: 1px 5px; border-radius: 4px; font-size: 11px; margin-left: 5px;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. 核心資料庫 (融合風管處地圖 + 原有資料)
+# 3. 核心資料庫 (長濱鄉深度生態與部落資源)
 # ==========================================
-# 資料來源：本系統整合 2026 北橫櫻花地圖與在地旅遊資訊
 all_spots_db = [
-    # --- 【重點 1】您指定的 6 大名所 (置頂) ---
-    {"name": "翠墨莊園 (翠墨山莊)", "region": "前山", "month": [1, 2], "type": "網美", "flower": "緋寒櫻", "fee": "門票$150", "desc": "三民里大窩部落，精緻日式造景。"},
-    {"name": "詩朗櫻花坡 (詩朗道路)", "region": "前山", "month": [1, 2, 3], "type": "賞花", "flower": "多品種櫻花", "fee": "免門票", "desc": "澤仁里詩朗部落。花期：枝垂櫻1/20-2/15、八重櫻2/10-3/2、吉野櫻2/15-3/2。"},
-    {"name": "詩朗部落祕境", "region": "前山", "month": [1, 2], "type": "健行", "flower": "枝垂櫻", "fee": "免門票", "desc": "澤仁里詩朗部落深處，在地人才知道的幽靜步道。"},
-    {"name": "中巴陵櫻木花道", "region": "後山", "month": [2, 3], "type": "賞花", "flower": "昭和櫻/千島櫻", "fee": "免門票", "desc": "華陵里中巴陵，免費粉紅隧道。花期：昭和櫻2/18-3/10、千島櫻2/28-3/15。"},
-    {"name": "青鬆園 (輕鬆園)", "region": "後山", "month": [2, 3], "type": "賞花", "flower": "墨染櫻", "fee": "門票$100", "desc": "華陵里上巴陵比該路段，賞花新秘境。電話：0937-840-134。"},
-    {"name": "恩愛農場", "region": "後山", "month": [2, 3], "type": "賞花", "flower": "千島/富士櫻", "fee": "門票$100", "desc": "華陵里上巴陵中心路頂端，全台最知名。電話：03-3912335。"},
+    # --- 海岸線 (打卡、海景、地質) ---
+    {"name": "金剛大道", "region": "海岸", "type": "絕景", "feature": "山海一線", "fee": "免門票", "desc": "長光部落的無電線桿大道，直通太平洋，宛如東海岸的伯朗大道。"},
+    {"name": "八仙洞遺址", "region": "海岸", "type": "文化", "feature": "史前遺跡", "fee": "停車費", "desc": "台灣最古老的舊石器時代長濱文化遺址，海蝕洞奇觀。"},
+    {"name": "樟原船型教堂", "region": "海岸", "type": "建築", "feature": "諾亞方舟", "fee": "免門票", "desc": "阿美族部落裡的特色教堂，外觀如一艘大船停泊海岸。"},
+    {"name": "星龍營業所", "region": "海岸", "type": "美食", "feature": "無敵海景", "fee": "低消一杯", "desc": "隱身在海岸山脈半山腰的秘境咖啡廳，俯瞰太平洋。"},
+    {"name": "烏石鼻漁港", "region": "海岸", "type": "生態", "feature": "火山岩", "fee": "免門票", "desc": "全台最大的柱狀火山岩體，安靜純樸的小漁港。"},
 
-    # --- 【重點 2】角板山・東眼山・羅浮一帶 (前山) ---
-    {"name": "悠然秘境小屋", "region": "前山", "month": [2, 3], "flower": "吉野櫻", "type": "賞花", "fee": "門票$50", "desc": "三民隱藏版。導航「復興觀音洞」再依指標。電話：0958-761-027。"},
-    {"name": "新櫻花莊園", "region": "前山", "month": [1, 2], "flower": "山櫻花", "type": "賞花", "fee": "洽詢", "desc": "復興區詩朗19號。電話：0922-295-888。"},
-    {"name": "角板山行館", "region": "前山", "month": [1, 2], "flower": "梅花/山櫻", "type": "賞花", "fee": "免門票", "desc": "北橫賞花起點，戰備隧道。山櫻花期：1/20-2/15。"},
-    {"name": "東眼山櫻花大道", "region": "前山", "month": [1, 2], "flower": "山櫻花", "type": "健行", "fee": "免門票", "desc": "往東眼山森林遊樂區桃119線。花期：1/25-2/15。"},
-    {"name": "羅馬公路", "region": "前山", "month": [1, 2], "flower": "山櫻花", "type": "兜風", "fee": "免門票", "desc": "桃118線，最美兜風路線。花期：1/25-2/15。"},
-    {"name": "小烏來風景區", "region": "前山", "month": [1, 2], "flower": "山櫻花", "type": "景觀", "fee": "門票$50", "desc": "義盛義興里下方內1鄰4-6號。花期：1/25-2/15。"},
-    {"name": "成福道路", "region": "前山", "month": [1, 2], "flower": "山櫻花", "type": "兜風", "fee": "免門票", "desc": "東眼山支線 (桃119線) 秘境。"},
-    {"name": "丸山咖啡", "region": "前山", "month": [2], "flower": "景觀櫻花", "type": "美食", "fee": "低消", "desc": "海拔600m景觀餐廳。"},
-    {"name": "新溪口吊橋", "region": "前山", "month": [1, 2, 3], "flower": "景觀", "type": "景觀", "fee": "門票$50", "desc": "全台最長懸索橋。"},
+    # --- 部落秘境 (深度體驗、原民文化) ---
+    {"name": "南竹湖部落", "region": "部落", "type": "體驗", "feature": "白螃蟹故鄉", "fee": "需預約", "desc": "充滿皮雕與月桃編織工藝的阿美族部落，提供部落深度導覽。"},
+    {"name": "真柄部落 (梯田)", "region": "部落", "type": "秘境", "feature": "山海梯田", "fee": "免門票", "desc": "馬武窟溪畔，擁有壯麗的海岸梯田景觀，最適合慢步。"},
+    {"name": "長光部落", "region": "部落", "type": "文化", "feature": "敲打樹皮", "fee": "需預約", "desc": "嚴長壽推薦的部落，可體驗傳統樹皮布製作與阿美族醃肉。"},
+    {"name": "永福部落", "region": "部落", "type": "體驗", "feature": "海鹽爺爺", "fee": "需預約", "desc": "傳承古法手工炒海鹽，體驗東海岸純粹的海之味。"},
 
-    # --- 【重點 3】高義・爺亨・下巴陵一帶 (部落) ---
-    {"name": "培雅境露營區", "region": "部落", "month": [1, 2, 3], "flower": "昭和櫻/千島櫻", "type": "露營", "fee": "洽詢", "desc": "澤仁里新興露營秘境，被粉紅花海包圍。"},
-    {"name": "卡維蘭部落", "region": "部落", "month": [2, 3], "flower": "八重櫻/吉野櫻", "type": "秘境", "fee": "免門票", "desc": "高義村。吉野櫻 2/12-3/5、八重櫻 2/10-3/2。"},
-    {"name": "光華櫻花故事林道", "region": "部落", "month": [1, 2, 3], "flower": "昭和櫻", "type": "秘境", "fee": "免門票", "desc": "光華國小旁。昭和櫻 2/20-3/5。"},
-    {"name": "比亞外櫻花迎賓道", "region": "部落", "month": [1, 2, 3], "flower": "昭和櫻/山櫻", "type": "生態", "fee": "免門票", "desc": "昭和櫻 2/12-3/5、山櫻花 1/25-2/25。"},
-    {"name": "爺亨梯田", "region": "部落", "month": [1, 2], "flower": "山櫻/富士櫻", "type": "景觀", "fee": "免門票", "desc": "爺亨道路。山櫻 1/25-2/20、富士櫻 1/30-2/20。"},
-    {"name": "巴陵道路", "region": "部落", "month": [2, 3], "flower": "八重/香水/吉野", "type": "兜風", "fee": "免門票", "desc": "花期：八重櫻2/10-2/28、香水櫻2/18-3/10。"},
-    {"name": "內奎輝部落", "region": "部落", "month": [1, 2], "flower": "野櫻", "type": "秘境", "fee": "免門票", "desc": "深山寧靜部落。"},
-    {"name": "高義蘭(夏蝶冬櫻)", "region": "部落", "month": [2], "flower": "香水櫻", "type": "賞花", "fee": "免門票", "desc": "新開發的山谷雙色花海。"},
-    {"name": "雪霧鬧部落", "region": "部落", "month": [2, 3], "flower": "桃花/櫻花", "type": "秘境", "fee": "免門票", "desc": "雲端上的部落。"},
-
-    # --- 【重點 4】中巴陵・上巴陵一帶 (後山) ---
-    {"name": "谷點咖啡民宿", "region": "後山", "month": [2], "flower": "櫻花景觀", "type": "美食", "fee": "低消", "desc": "中巴陵絕佳視野。電話：03-3912415。"},
-    {"name": "拉拉山遊客中心", "region": "後山", "month": [2, 3], "flower": "千島櫻", "type": "賞花", "fee": "免門票", "desc": "華陵里7鄰29號。停車場就是絕美景點。"},
-    {"name": "上巴陵九鄰櫻花部落", "region": "後山", "month": [2, 3], "flower": "櫻花", "type": "秘境", "fee": "免門票", "desc": "復興區詩朗19號 (地圖標示位)。"},
-    {"name": "拉拉山秘密花園", "region": "後山", "month": [2, 3], "flower": "櫻花", "type": "賞花", "fee": "洽詢", "desc": "復興區神木路。電話：0985-430-486。"},
-    {"name": "觀雲休憩農莊", "region": "後山", "month": [2, 3], "flower": "昭和櫻", "type": "賞花", "fee": "免門票", "desc": "中心路145-6號。電話：0965-357-601。"},
-    {"name": "楓墅農莊", "region": "後山", "month": [2], "flower": "昭和櫻", "type": "秘境", "fee": "清潔費", "desc": "中心路210巷17號。電話：0965-357-601。"},
-    {"name": "光明休閒農場", "region": "後山", "month": [3], "flower": "霧社櫻", "type": "美食", "fee": "需用餐", "desc": "華陵村11鄰192-8號。稀有白櫻。電話：0913-566-218。"},
-    {"name": "中心路沿線", "region": "後山", "month": [2, 3], "flower": "富士/昭和/千島", "type": "兜風", "fee": "部分收費", "desc": "富士櫻2/18-3/10、昭和櫻2/20-3/5。"},
-    {"name": "嶺鎮渡假木屋", "region": "後山", "month": [2, 3], "flower": "櫻花", "type": "景觀", "fee": "需消費", "desc": "中心路210巷2號。電話：0928-036-122。"},
-    {"name": "拉拉山巨木區", "region": "後山", "month": [1, 2, 3, 4], "flower": "神木", "type": "健行", "fee": "門票$100", "desc": "千年紅檜群深呼吸。電話：03-3912142。"},
-    {"name": "俠雲山莊", "region": "後山", "month": [2], "flower": "昭和櫻", "type": "賞花", "fee": "免門票", "desc": "梯田式櫻花林。"},
-    {"name": "八福原櫻園", "region": "後山", "month": [2, 3], "flower": "富士櫻", "type": "賞花", "fee": "門票制", "desc": "卡拉部落新秘境。"},
-    {"name": "櫻花莊園", "region": "後山", "month": [2, 3], "flower": "雙色櫻", "type": "住宿", "fee": "住宿客", "desc": "精緻民宿造景。"},
-    {"name": "巴陵古道生態園區", "region": "後山", "month": [2], "flower": "山櫻/昭和", "type": "文化", "fee": "免門票", "desc": "森林步道與博物館。"},
-    {"name": "拉拉山5.5K觀景台", "region": "後山", "month": [2], "flower": "昭和櫻", "type": "攝影", "fee": "免門票", "desc": "攝影師拍攝彎道名點。"}
+    # --- 山林慢食 (無菜單、在地食材) ---
+    {"name": "Sinasera 24", "region": "山海", "type": "慢食", "feature": "法式無菜單", "fee": "$3000起", "desc": "南法米其林三星主廚返台開設，結合長濱在地24節氣食材 (極難訂位)。"},
+    {"name": "齒草埔", "region": "山海", "type": "慢食", "feature": "料理人的家", "fee": "需預約", "desc": "隱密空間內的細緻無菜單料理，專注於食材與感官的對話。"},
+    {"name": "長濱吳神父腳底按摩", "region": "山海", "type": "療癒", "feature": "正宗發源地", "fee": "依項目", "desc": "長濱天主堂內，純正吳神父足部健康法，消除旅途疲勞。"},
+    {"name": "邱爸爸海味", "region": "山海", "type": "美食", "feature": "海鮮無菜單", "fee": "約$500/人", "desc": "在地漁港現撈海產，沒有菜單，看老闆今天捕到什麼吃什麼。"}
 ]
 
-# 住宿資料庫
 hotels_db = [
-    # 前山
-    {"name": "復興青年活動中心", "region": "前山", "tag": "高CP值", "price": 2000, "desc": "角板山公園內，最方便。"},
-    {"name": "普拉多山丘假期", "region": "前山", "tag": "歐式鄉村", "price": 3800, "desc": "三民地區黃色歐風建築。"},
-    {"name": "羅浮天空溫泉飯店", "region": "前山", "tag": "溫泉", "price": 4500, "desc": "房內泡湯，設施新穎。"},
-    {"name": "小烏來山莊", "region": "前山", "tag": "景觀", "price": 2800, "desc": "近天空步道。"},
-    {"name": "山水奇異民宿", "region": "前山", "tag": "英式", "price": 3500, "desc": "適合拍照。"},
-    {"name": "象山民宿", "region": "前山", "tag": "平價", "price": 1800, "desc": "老字號民宿。"},
-    
-    # 部落
-    {"name": "爺亨溫泉夢幻露營", "region": "部落", "tag": "露營", "price": 3500, "desc": "櫻花樹下的豪華露營。"},
-    {"name": "河那灣民宿", "region": "部落", "tag": "原民風", "price": 2200, "desc": "羅浮橋畔，親近自然。"},
-    {"name": "飛鼠不渴露營區", "region": "部落", "tag": "親子", "price": 3000, "desc": "雪霧鬧雲端露營。"},
-    {"name": "伊萬農場", "region": "部落", "tag": "賞櫻", "price": 1000, "desc": "知名賞櫻露營點。"},
-    
-    # 後山
-    {"name": "恩愛農場小木屋", "region": "後山", "tag": "花海", "price": 5000, "desc": "出門就是櫻花(極難訂)。"},
-    {"name": "雲山仙境民宿", "region": "後山", "tag": "雲海", "price": 4200, "desc": "上巴陵高評價景觀民宿。"},
-    {"name": "谷點咖啡民宿", "region": "後山", "tag": "景觀", "price": 3800, "desc": "無敵山景視野 (含賞櫻)。"},
-    {"name": "富仙境渡假旅館", "region": "後山", "tag": "便利", "price": 2500, "desc": "上巴陵鬧區，吃飯方便。"},
-    {"name": "俠雲山莊", "region": "後山", "tag": "包棟", "price": 3000, "desc": "就在櫻花林旁邊。"},
-    {"name": "嶺鎮渡假木屋", "region": "後山", "tag": "視野", "price": 3200, "desc": "中心路最高點，俯瞰全景。"},
-    {"name": "瑞士鄉村農莊", "region": "後山", "tag": "歐風", "price": 3600, "desc": "中心路老字號民宿。"},
-    {"name": "達觀山莊", "region": "後山", "tag": "神木", "price": 2800, "desc": "近拉拉山神木區入口。"},
-    {"name": "侑德園民宿", "region": "後山", "tag": "木屋", "price": 3000, "desc": "上巴陵中心，環境舒適。"},
-    {"name": "觀雲休憩農莊", "region": "後山", "tag": "平價", "price": 2000, "desc": "恩愛農場旁高CP值。"}
+    {"name": "畫日風尚 Sinasera Resort", "region": "海岸", "tag": "奢華渡假", "price": 6000, "desc": "Sinasera 24 餐廳所在，法式優雅與太平洋的結合。"},
+    {"name": "陽光佈居", "region": "山海", "tag": "靈修慢活", "price": 3500, "desc": "位於半山腰，無電視干擾，提倡純粹寧靜與星空。"},
+    {"name": "聽風說故事", "region": "海岸", "tag": "無敵海景", "price": 4200, "desc": "每間房都能看日出，擁有大片草皮的質感民宿。"},
+    {"name": "竹湖山居", "region": "山林", "tag": "生態體驗", "price": 3800, "desc": "被果園與森林包圍，生態極為豐富的隱世山居。"},
+    {"name": "真柄禾多露營區", "region": "部落", "tag": "梯田露營", "price": 1200, "desc": "背山面海，在金黃色稻浪與滿天星斗中入眠。"}
 ]
 
 # ==========================================
-# 4. 邏輯核心：動態行程生成演算法
+# 4. 邏輯核心：動態路由演算 (Integ-CRF v9.0 精神)
 # ==========================================
-def generate_dynamic_itinerary(travel_date, days_str, group):
-    m = travel_date.month
-    
-    # 1. 篩選當月可去的景點
-    available_spots = [s for s in all_spots_db if m in s['month']]
-    
-    # 防呆：若該月無花，塞入常態景點
-    if not available_spots:
-        available_spots = [s for s in all_spots_db if s['flower'] in ["神木", "景觀"]]
-
-    # 2. 分區篩選
-    front_spots = [s for s in available_spots if s['region'] == "前山"]
-    back_spots = [s for s in available_spots if s['region'] == "後山"]
+def generate_dynamic_itinerary(days_str, group):
+    # 分類池
+    coast_spots = [s for s in all_spots_db if s['region'] == "海岸"]
+    tribe_spots = [s for s in all_spots_db if s['region'] == "部落"]
+    food_spots = [s for s in all_spots_db if s['region'] == "山海"]
     
     if "一日" in days_str: day_count = 1
     elif "二日" in days_str: day_count = 2
@@ -300,53 +221,48 @@ def generate_dynamic_itinerary(travel_date, days_str, group):
     
     itinerary = {}
     
-    # --- Day 1: 必去賞花熱點 ---
-    # 優先從您指定的熱點中挑選 Day 1 上午
-    top_picks = ["角板山行館", "翠墨莊園 (翠墨山莊)", "詩朗櫻花坡", "恩愛農場"]
-    d1_spot1 = next((s for s in available_spots if s['name'] in top_picks), available_spots[0])
-    
-    remaining = [s for s in available_spots if s['name'] != d1_spot1['name']]
-    d1_spot2 = remaining[0] if remaining else d1_spot1
-    
+    # --- Day 1: 經典東海岸與地質奇觀 ---
+    # 上午：打卡大景 / 下午：海岸咖啡或漁港
+    d1_spot1 = next((s for s in coast_spots if s['name'] == "金剛大道"), coast_spots[0])
+    d1_spot2 = next((s for s in coast_spots if s['name'] == "星龍營業所"), coast_spots[1])
     itinerary[1] = [d1_spot1, d1_spot2]
     
-    # --- Day 2: 深入後山 ---
+    # --- Day 2: 深入部落與慢食體驗 ---
     if day_count >= 2:
-        # Day 2 上午：優先挑選後山指定新景點
-        d2_priority = ["青鬆園 (輕鬆園)", "中巴陵櫻木花道", "拉拉山巨木區", "拉拉山秘密花園"]
-        d2_spot1 = next((s for s in back_spots if s['name'] in d2_priority), None)
-        if not d2_spot1: d2_spot1 = back_spots[0] if back_spots else front_spots[0]
-        
-        # Day 2 下午
-        used_names = [s['name'] for s in itinerary[1]] + [d2_spot1['name']]
-        d2_pool = [s for s in available_spots if s['name'] not in used_names]
-        d2_spot2 = d2_pool[0] if d2_pool else d2_spot1
-            
+        # 上午：部落體驗
+        d2_spot1 = random.choice(tribe_spots)
+        # 下午：慢食或身心療癒
+        d2_spot2 = next((s for s in food_spots if s['name'] == "長濱吳神父腳底按摩"), food_spots[0])
         itinerary[2] = [d2_spot1, d2_spot2]
 
-    # --- Day 3: 回程補漏 ---
+    # --- Day 3: 史前遺跡與返程採買 ---
     if day_count == 3:
+        d3_spot1 = next((s for s in coast_spots if s['name'] == "八仙洞遺址"), coast_spots[2])
+        # 尋找未被選中的在地美食作為收尾
         used_names = [s['name'] for day in itinerary.values() for s in day]
-        d3_pool = [s for s in front_spots if s['name'] not in used_names]
-        if not d3_pool: d3_pool = [s for s in available_spots if s['name'] not in used_names]
-        
-        d3_spot1 = d3_pool[0] if d3_pool else itinerary[1][0]
-        d3_spot2 = {"name": "大溪老街/復興橋", "region": "前山", "flower": "人文", "type": "採買", "fee": "免門票", "desc": "回程購買名產與豆干。"}
+        remaining_food = [s for s in food_spots if s['name'] not in used_names]
+        d3_spot2 = remaining_food[0] if remaining_food else {"name": "長濱市區採買", "region": "山海", "type": "採買", "feature": "伴手禮", "fee": "自費", "desc": "採購長濱米、手炒海鹽與部落手工藝品。"}
         
         itinerary[3] = [d3_spot1, d3_spot2]
 
-    titles = {1: "❄️ 早春寒梅與山櫻", 2: "🌸 粉紅櫻花大爆發", 3: "🍑 桃花與吉野櫻尾聲", 4: "🌲 螢火蟲與神木季"}
-    status_title = titles.get(m, "🌲 四季山林森呼吸")
+    # 根據族群給予不同的主題標題
+    titles = {
+        "情侶/夫妻": "🍷 太平洋畔的浪漫慢食之旅",
+        "親子家庭": "🦀 部落童趣與潮間帶生態紀實",
+        "長輩同行": "🌿 吳神父足療與山海無壓慢活",
+        "熱血獨旅": "🏍️ 擁抱金剛大道的山海追風"
+    }
+    status_title = titles.get(group, "🌊 長濱山海慢活之旅")
     
     return status_title, itinerary
 
 # ==========================================
-# 5. 頁面內容
+# 5. 頁面內容渲染
 # ==========================================
 st.markdown("""
     <div class="header-box">
-        <div class="header-title">🌸 2026 復興區賞櫻攻略</div>
-        <div class="header-subtitle">桃園市復興區長 <b>蘇佐璽</b> 邀請您 ❤️</div>
+        <div class="header-title">🌊 2026 長濱鄉深度導覽</div>
+        <div class="header-subtitle">把心遺留在太平洋的風裡 🌾</div>
     </div>
 """, unsafe_allow_html=True)
 
@@ -354,23 +270,22 @@ with st.container():
     st.markdown('<div class="input-card">', unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
-        # 日期選單 (CSS 已特別加強高亮)
-        travel_date = st.date_input("📅 出發日期 (必填)", value=date(2026, 2, 14))
+        travel_date = st.date_input("📅 預計抵達日期", value=date.today())
     with col2:
-        days_str = st.selectbox("🕒 行程天數", ["一日遊 (快閃)", "二日遊 (過夜)", "三日遊 (深度)"])
-        group = st.selectbox("👥 出遊夥伴", ["情侶/夫妻", "親子家庭", "長輩同行", "熱血獨旅"])
+        days_str = st.selectbox("🕒 停留天數", ["一日遊 (海岸快閃)", "二日遊 (部落留宿)", "三日遊 (深度慢活)"])
+        group = st.selectbox("👥 旅伴屬性", ["情侶/夫妻", "親子家庭", "長輩同行", "熱血獨旅"])
     
-    if st.button("🚀 生成蘇區長推薦行程"):
+    if st.button("🚀 生成長濱專屬行程"):
         st.session_state['generated'] = True
     st.markdown('</div>', unsafe_allow_html=True)
 
 if st.session_state.get('generated'):
-    status_title, itinerary = generate_dynamic_itinerary(travel_date, days_str, group)
+    status_title, itinerary = generate_dynamic_itinerary(days_str, group)
     
     st.markdown(f"""
     <div class="info-box">
         <h4>{status_title}</h4>
-        <p>為您規劃 <b>{travel_date.strftime('%Y/%m/%d')}</b> 出發的 <b>{group}</b> 行程！</p>
+        <p>為您演算 <b>{travel_date.strftime('%Y/%m/%d')}</b> 啟程的 <b>{group}</b> 專屬路線！</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -383,8 +298,9 @@ if st.session_state.get('generated'):
             
             # 標籤生成
             tags_html = f'<span class="spot-tag">{spot["type"]}</span>'
-            tags_html += f'<span class="spot-tag">{spot["flower"]}</span>'
-            if spot['region'] == "部落": tags_html += '<span class="spot-tag" style="background:#E6E6FA;color:#4B0082!important;">部落秘境</span>'
+            tags_html += f'<span class="spot-tag">{spot["feature"]}</span>'
+            if spot['region'] == "部落": 
+                tags_html += '<span class="spot-tag" style="background:#E9D8A6;color:#CA6702!important;">阿美族文化</span>'
             
             st.markdown(f"""
             <div class="timeline-item">
@@ -399,19 +315,19 @@ if st.session_state.get('generated'):
 
     # --- 住宿推薦 (僅多日遊顯示) ---
     if "一日" not in days_str:
-        st.markdown("### 🏨 蘇區長精選住宿")
+        st.markdown("### 🏨 長濱秘境宿單 (防呆推薦)")
         
-        # 簡單篩選邏輯
-        if "後山" in [s['region'] for day in itinerary.values() for s in day]:
-            rec_hotels = [h for h in hotels_db if h['region'] in ["後山", "部落"]]
+        # 根據旅伴屬性簡單過濾
+        if group == "親子家庭" or group == "長輩同行":
+            rec_hotels = [h for h in hotels_db if h['tag'] not in ["梯田露營"]] # 長輩小孩避免露營
         else:
-            rec_hotels = [h for h in hotels_db if h['region'] == "前山"]
+            rec_hotels = hotels_db
             
         # 隨機秀 3 間
         for h in random.sample(rec_hotels, min(3, len(rec_hotels))):
             st.markdown(f"""
             <div class="hotel-card">
-                <div style="font-weight:bold; color:#483D8B;">{h['name']} <span class="hotel-tag">{h['tag']}</span></div>
+                <div style="font-weight:bold; color:#0A9396;">{h['name']} <span class="hotel-tag">{h['tag']}</span></div>
                 <div style="font-size:13px; color:#666; margin-top:3px;">
                     💲 {h['price']}起 | {h['desc']}
                 </div>
@@ -419,19 +335,17 @@ if st.session_state.get('generated'):
             """, unsafe_allow_html=True)
 
 # --- 頁尾景點總覽 ---
-with st.expander("📖 查看 2026 所有賞櫻熱點名錄"):
-    st.markdown("#### 北橫櫻花地圖總覽")
-    # 依區域分類顯示
-    for region in ["前山", "部落", "後山"]:
-        st.markdown(f"**【{region}區】**")
+with st.expander("📖 展開長濱鄉全境資源矩陣 (All Spots)"):
+    st.markdown("#### 東海岸大數據庫")
+    for region in ["海岸", "部落", "山海"]:
+        st.markdown(f"**【{region}線】**")
         region_spots = [s for s in all_spots_db if s['region'] == region]
         cols = st.columns(2)
         for i, s in enumerate(region_spots):
             with cols[i % 2]:
                 st.markdown(f"""
                 <div class="mini-card">
-                    <b>{s['name']}</b> <span class="flower-badge">{s['flower']}</span><br>
+                    <b>{s['name']}</b> <span class="feature-badge">{s['feature']}</span><br>
                     <span style="color:#888; font-size:12px;">{s['desc']}</span>
                 </div>
                 """, unsafe_allow_html=True)
-
